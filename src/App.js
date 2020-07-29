@@ -1,6 +1,10 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
+import { AppContextProvider } from './context/AppContext'
+
+import ClearBtn from './ClearButton'
+
 import './styles.css'
 
 export function useConfiguration() {
@@ -119,8 +123,14 @@ export default function App() {
         )}
       </div>
       {memoizedDisplay}
-
-      <Link to="/greeting">Próximo</Link>
+      {inputValue && (
+        <AppContextProvider value={{ setInputValue }}>
+          <ClearBtn />
+        </AppContextProvider>
+      )}
+      <Link style={{ display: 'block' }} to="/greeting">
+        Próximo
+      </Link>
     </div>
   )
 }
