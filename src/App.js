@@ -30,8 +30,8 @@ export default function App() {
   const [visible, setVisible] = React.useState(false)
   // const [inputValue, setInputValue] = React.useState('')
   const { inputValue, setInputValue } = useConfiguration()
-  const [{ surname, age }, setState] = React.useReducer(reducer, {
-    surname: '',
+  const [{ lastName, age }, setState] = React.useReducer(reducer, {
+    lastName: '',
     age: '',
   })
   const container = React.useRef()
@@ -39,7 +39,7 @@ export default function App() {
   const inputElement = React.useRef()
 
   React.useEffect(() => {
-    console.log('adding')
+    console.log('adding event listener')
     const handleClick = event => {
       if (
         container?.current?.contains(event.target) ||
@@ -53,13 +53,18 @@ export default function App() {
     document.addEventListener('mousedown', handleClick)
 
     return () => {
-      console.log('removing')
+      console.log('removing event listener')
       document.removeEventListener('mousedown', handleClick)
     }
   }, [])
 
+  // const handleInputFocus = () => {
+  //   console.log('handling input focus')
+  //   if (visible) inputElement.current.focus()
+  // }
+
   const handleInputFocus = React.useCallback(() => {
-    console.log('maoe')
+    console.log('handling input focus')
     if (visible) inputElement.current.focus()
   }, [visible])
 
@@ -68,20 +73,21 @@ export default function App() {
     handleInputFocus()
   }, [handleInputFocus])
 
-  // const memoizedDisplay = React.useMemo(
-  //   () => (
-  //     <Display visible={inputValue}>
-  //       {inputValue} {surname} {age && `, ${age} anos`}
-  //     </Display>
-  //   ),
-  //   [inputValue, surname, age],
-  // )
-
-  const memoizedDisplay = (
-    <Display visible={inputValue}>
-      {inputValue} {surname} {age && `, ${age} anos`}
-    </Display>
+  const memoizedDisplay = React.useMemo(
+    () => (
+      <Display visible={inputValue}>
+        {inputValue} {lastName}
+        {age && `, ${age} anos`}
+      </Display>
+    ),
+    [inputValue, lastName, age],
   )
+
+  // const memoizedDisplay = (
+  //   <Display visible={inputValue}>
+  //     {inputValue} {lastName} {age && `, ${age} anos`}
+  //   </Display>
+  // )
 
   return (
     <div className="App">
@@ -108,17 +114,32 @@ export default function App() {
               onChange={({ target: { value } }) => setInputValue(value)}
               ref={inputElement}
               type="text"
+              style={{ marginRight: 8 }}
+              placeholder="Nome"
             />
             <input
-              value={surname}
-              onChange={({ target: { value } }) => setState({ surname: value })}
+              value={lastName}
+              onChange={({ target: { value } }) =>
+                setState({ lastName: value })
+              }
               type="text"
+              style={{ marginRight: 8 }}
+              placeholder="Sobrenome"
             />
             <input
               value={age}
               onChange={({ target: { value } }) => setState({ age: value })}
-              type="text"
+              type="number"
+              placeholder="Idade"
             />
+            <div>
+              <Link
+                style={{ display: 'block', color: 'white', marginTop: 20 }}
+                to="/greeting"
+              >
+                Próximo
+              </Link>
+            </div>
           </>
         )}
       </div>
@@ -128,9 +149,6 @@ export default function App() {
           <ClearBtn />
         </AppContextProvider>
       )}
-      <Link style={{ display: 'block' }} to="/greeting">
-        Próximo
-      </Link>
     </div>
   )
 }
