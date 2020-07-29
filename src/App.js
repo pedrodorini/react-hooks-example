@@ -1,4 +1,4 @@
-import React, { useCallback, useReducer } from 'react'
+import React from 'react'
 import { Link } from 'react-router-dom'
 
 import './styles.css'
@@ -26,7 +26,7 @@ export default function App() {
   const [visible, setVisible] = React.useState(false)
   // const [inputValue, setInputValue] = React.useState('')
   const { inputValue, setInputValue } = useConfiguration()
-  const [{ surname, age }, setState] = useReducer(reducer, {
+  const [{ surname, age }, setState] = React.useReducer(reducer, {
     surname: '',
     age: '',
   })
@@ -54,7 +54,7 @@ export default function App() {
     }
   }, [])
 
-  const handleInputFocus = useCallback(() => {
+  const handleInputFocus = React.useCallback(() => {
     console.log('maoe')
     if (visible) inputElement.current.focus()
   }, [visible])
